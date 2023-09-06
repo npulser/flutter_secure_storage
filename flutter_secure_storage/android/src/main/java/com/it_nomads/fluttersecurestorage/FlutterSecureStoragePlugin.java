@@ -80,6 +80,9 @@ public class FlutterSecureStoragePlugin implements MethodCallHandler, FlutterPlu
     }
 
     private String addPrefixToKey(String key) {
+        if (secureStorage.ELEMENT_PREFERENCES_KEY_PREFIX.isEmpty()) {
+            return key;
+        }
         return secureStorage.ELEMENT_PREFERENCES_KEY_PREFIX + "_" + key;
     }
 

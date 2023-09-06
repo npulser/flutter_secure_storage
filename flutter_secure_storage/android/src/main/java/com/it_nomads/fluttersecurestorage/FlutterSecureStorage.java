@@ -27,9 +27,11 @@ public class FlutterSecureStorage {
     private final String TAG = "SecureStorageAndroid";
     private final Charset charset;
     private final Context applicationContext;
-    protected String ELEMENT_PREFERENCES_KEY_PREFIX = "VGhpcyBpcyB0aGUgcHJlZml4IGZvciBhIHNlY3VyZSBzdG9yYWdlCg";
+    protected final String DEFAULT_ELEMENT_PREFERENCES_KEY_PREFIX = "VGhpcyBpcyB0aGUgcHJlZml4IGZvciBhIHNlY3VyZSBzdG9yYWdlCg";
+    protected String ELEMENT_PREFERENCES_KEY_PREFIX = DEFAULT_ELEMENT_PREFERENCES_KEY_PREFIX;
     protected Map<String, Object> options;
-    private String SHARED_PREFERENCES_NAME = "FlutterSecureStorage";
+    private final String DEFAULT_SHARED_PREFERENCES_NAME = "FlutterSecureStorage";
+    private String SHARED_PREFERENCES_NAME = DEFAULT_SHARED_PREFERENCES_NAME;
     private SharedPreferences preferences;
     private StorageCipher storageCipher;
     private StorageCipherFactory storageCipherFactory;
@@ -137,11 +139,16 @@ public class FlutterSecureStorage {
         // TODO: Disable for now because this will break mixed usage of secureSharedPreference
 //        if (preferences != null) return;
 
-        if (options.containsKey("sharedPreferencesName") && !((String) options.get("sharedPreferencesName")).isEmpty()) {
-            SHARED_PREFERENCES_NAME = (String) options.get("sharedPreferencesName");
+        SHARED_PREFERENCES_NAME = (String) options.get("sharedPreferencesName");
+        if (SHARED_PREFERENCES_NAME == null || SHARED_PREFERENCES_NAME.isEmpty()) {
+            SHARED_PREFERENCES_NAME = DEFAULT_SHARED_PREFERENCES_NAME;
         }
 
-        if (options.containsKey("preferencesKeyPrefix") && !((String) options.get("preferencesKeyPrefix")).isEmpty()) {
+        if (!options.containsKey("preferencesKeyPrefix")) {
+            ELEMENT_PREFERENCES_KEY_PREFIX = DEFAULT_ELEMENT_PREFERENCES_KEY_PREFIX;
+        } else if (((String) options.get("preferencesKeyPrefix")).isEmpty()) {
+            ELEMENT_PREFERENCES_KEY_PREFIX = "";
+        } else {
             ELEMENT_PREFERENCES_KEY_PREFIX = (String) options.get("preferencesKeyPrefix");
         }
 
