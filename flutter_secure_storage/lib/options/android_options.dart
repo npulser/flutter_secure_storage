@@ -20,6 +20,7 @@ class AndroidOptions extends Options {
         StorageCipherAlgorithm.AES_CBC_PKCS7Padding,
     this.sharedPreferencesName,
     this.preferencesKeyPrefix,
+    this.keystoreAlias,
   })  : _encryptedSharedPreferences = encryptedSharedPreferences,
         _resetOnError = resetOnError,
         _keyCipherAlgorithm = keyCipherAlgorithm,
@@ -63,6 +64,8 @@ class AndroidOptions extends Options {
   /// WARNING: If you change this you can't retrieve already saved preferences.
   final String? preferencesKeyPrefix;
 
+  final String? keystoreAlias;
+
   static const AndroidOptions defaultOptions = AndroidOptions();
 
   @override
@@ -73,6 +76,7 @@ class AndroidOptions extends Options {
         'storageCipherAlgorithm': describeEnum(_storageCipherAlgorithm),
         'sharedPreferencesName': sharedPreferencesName ?? '',
         'preferencesKeyPrefix': preferencesKeyPrefix ?? '',
+        'keystoreAlias': keystoreAlias ?? '',
       };
 
   AndroidOptions copyWith({
@@ -82,6 +86,7 @@ class AndroidOptions extends Options {
     StorageCipherAlgorithm? storageCipherAlgorithm,
     String? preferencesKeyPrefix,
     String? sharedPreferencesName,
+    String? keystoreAlias,
   }) =>
       AndroidOptions(
         encryptedSharedPreferences:
@@ -92,5 +97,6 @@ class AndroidOptions extends Options {
             storageCipherAlgorithm ?? _storageCipherAlgorithm,
         sharedPreferencesName: sharedPreferencesName,
         preferencesKeyPrefix: preferencesKeyPrefix,
+        keystoreAlias: keystoreAlias,
       );
 }

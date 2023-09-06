@@ -164,9 +164,12 @@ public class FlutterSecureStorage {
                 Log.e(TAG, "StorageCipher initialization failed", e);
             }
         }
+
         if (getUseEncryptedSharedPreferences() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                preferences = initializeEncryptedSharedPreferencesManager(applicationContext);
+                Log.i(TAG, "initialize encrypted preferences");
+                String keystoreAlias = (String) options.get("keystoreAlias");
+                preferences = initializeEncryptedSharedPreferencesManager(applicationContext, keystoreAlias);
                 checkAndMigrateToEncrypted(nonEncryptedPreferences, preferences);
             } catch (Exception e) {
                 Log.e(TAG, "EncryptedSharedPreferences initialization failed", e);
@@ -235,11 +238,15 @@ public class FlutterSecureStorage {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private SharedPreferences initializeEncryptedSharedPreferencesManager(Context context) throws GeneralSecurityException, IOException {
+    private SharedPreferences initializeEncryptedSharedPreferencesManager(Context context, String keystoreAlias) throws GeneralSecurityException, IOException {
+        if (keystoreAlias == null || keystoreAlias.isEmpty()) {
+            keystoreAlias = MasterKey.DEFAULT_MASTER_KEY_ALIAS;
+        }
+
         MasterKey key = new MasterKey.Builder(context)
                 .setKeyGenParameterSpec(
                         new KeyGenParameterSpec
-                                .Builder(MasterKey.DEFAULT_MASTER_KEY_ALIAS, KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                                .Builder(keystoreAlias, KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
                                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                                 .setKeySize(256).build())
