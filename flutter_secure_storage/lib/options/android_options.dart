@@ -74,9 +74,9 @@ class AndroidOptions extends Options {
         'resetOnError': '$_resetOnError',
         'keyCipherAlgorithm': describeEnum(_keyCipherAlgorithm),
         'storageCipherAlgorithm': describeEnum(_storageCipherAlgorithm),
-        'sharedPreferencesName': sharedPreferencesName ?? '',
-        'preferencesKeyPrefix': preferencesKeyPrefix ?? '',
-        'keystoreAlias': keystoreAlias ?? '',
+        if (sharedPreferencesName != null) 'sharedPreferencesName': sharedPreferencesName ?? '',
+        if (preferencesKeyPrefix != null) 'preferencesKeyPrefix': preferencesKeyPrefix ?? '',
+        if (keystoreAlias != null) 'keystoreAlias': keystoreAlias ?? '',
       };
 
   AndroidOptions copyWith({
